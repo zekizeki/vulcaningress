@@ -1,0 +1,30 @@
+etcd:
+  image: elcolio/etcd:latest
+  container_name: etcd
+  ports:
+    - "2379:2379"
+    - "4001:4001"
+
+vulcand:
+  container_name : vulcand
+  image: mailgun/vulcand:v0.8.0-beta.2
+  ports:
+    - "8181:8181"
+    - "8182:8182"
+  links:
+    - etcd
+  command: /go/bin/vulcand -apiInterface=0.0.0.0 --etcd=http://etcd:4001
+
+
+kubsvcpublish:
+  container_name: vulcaningress
+  image: zekizeki/vulcaningress:0.0.4
+  links:
+    - etcd
+  environment:
+    - ETCD_HOST=etcd
+    - ETCD_PORT=2379
+    - DOMAIN=.kubernetes
+    - KUBE_API_URL=http://192.168.99.100:8080/r/projects/1a8/kubernetes/api
+    
+
