@@ -17,6 +17,8 @@ var KUBE_API_PATH = '/api';
 var KUBE_API_URL = process.env.KUBE_API_URL || 'https://'+KUBERNETES_SERVICE_HOST+':'+KUBERNETES_SERVICE_PORT+ KUBE_API_PATH;
 var KUBE_API = KUBE_API_URL +'/v1/services?labelSelector='+KUBE_SELECTOR;
 var DOMAIN =  process.env.DOMAIN || '.kubernetes';
+var KUBE_API_USER = process.env.KUBE_API_USER || '';
+var KUBE_API_PASSWORD = process.env.KUBE_API_PASSWORD || '';
 
 var etcd = new etcdnodejs({
     url: 'http://'+ETCD_HOST+':'+ETCD_PORT
@@ -27,8 +29,10 @@ var etcd = new etcdnodejs({
 function checkServices() {
   console.log("requesting services from " + KUBE_API);
   
+  var authObj = {user:KUBE_API_USER,pass:KUBE_API_PASSWORD};
+  
   // call kubernetes API
-  request({uri:KUBE_API}, function (error, response, body) {
+  request({uri:KUBE_API,auth:authObj}, function (error, response, body) {
     
     if (!error && response.statusCode == 200) {
       var services = parseJSON(JSON.parse(body));
@@ -39,7 +43,7 @@ function checkServices() {
       addServiceBackends(services);
      
     } else {
-        console.log('error calling kubernetes API '+error)
+        console.log('status code'+response.statusCode +'error calling kubernetes API '+error)
     }
   
   })

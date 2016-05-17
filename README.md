@@ -64,7 +64,11 @@ spec:
           - name: KUBE_SELECTOR
             value: "type%3Dingress"
           - name: KUBE_API_URL
-            value: "http://9.45.207.152:8080/r/projects/1a8/kubernetes/api"
+            value: "http://192.168.99.100:8080/r/projects/1a8/kubernetes/api"
+          - name: KUBE_API_USER
+            value: yourusername
+          - name: KUBE_API_PASSWORD
+            value: yourpassword
 ```
 
 # Create the router
