@@ -26,7 +26,8 @@ metadata:
   labels:
     name: webtest1
     type: ingress
-    path: test
+  annotations:
+    path: /test
     host: mydomain.com
 spec:
   ports:

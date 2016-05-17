@@ -67,7 +67,7 @@ function parseJSON(serviceList) {
       namespace: serviceList.items[i].metadata.namespace,
       port: serviceList.items[i].spec.ports[0].port,
       ip: serviceList.items[i].spec.clusterIP,
-      labels: serviceList.items[i].metadata.labels
+      annotations: serviceList.items[i].metadata.annotations
     }
     
     services.push(service);
@@ -89,18 +89,19 @@ function addServiceBackends(services) {
     var name = services[i].name+"-"+services[i].namespace;
     var path = '/';
     
-    // allow a frontend to have a context path set for it
-    if(typeof(services[i].labels.path) !== 'undefined') {
+    
+    if(typeof(services[i].annotations) !== 'undefined') {
       
-      // ideally / should be in the path value but labels don't allow / characters :(
-      path = '/'+services[i].labels.path;
+      // allow a frontend to have a context path set for it
+      if(typeof(services[i].annotations.path) !== 'undefined') {
+        path = services[i].annotations.path;
+      } 
     
-    } 
-    
-    // allow the service to overide the host value through a label
-    if(typeof(services[i].labels.host) !== 'undefined') {
-      host = services[i].labels.host;
-    } 
+      // allow the service to overide the host value through a label
+      if(typeof(services[i].annotations.host) !== 'undefined') {
+        host = services[i].annotations.host;
+      } 
+    }
     
     // add backend and frontend info for vulcand to read from etcd
     etcd.write({key: "/vulcand/backends/"+name+"/backend",value: '{"Type": "http"}',ttl:30}, etcdCallback);

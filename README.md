@@ -55,7 +55,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.4
+        image: zekizeki/vulcaningress:0.0.5
         env:
           - name: ETCD_HOST
             value: "localhost"
@@ -86,13 +86,15 @@ The only required label is ...
 role=ingress
 ```
 
-optionally a path label may be used, this will route any inbound traffic to the router on certain context path to the service address ( the default path is / )
+# Service Annotations
+
+optionally a path annotation may be used, this will route any inbound traffic to the router on certain context path to the service address ( the default path is / )
 
 ```
-path=contextpath
+path=/contextpath
 ```
 
-optionally a host label may be used, by default the host name is made up of the service name and the namespace the service is published into combined with a domain name set by the router administrator.
+optionally a host annotation may be used, by default the host name is made up of the service name and the namespace the service is published into combined with a domain name set by the router administrator.
 
 ```
 host=myservice.mydomain.com
@@ -129,6 +131,9 @@ metadata:
   labels:
     name: webtest1
     type: ingress
+  annotations:
+    path: /mycontext
+    host: myapp.mydomain.com
 spec:
   ports:
   - port: 80
