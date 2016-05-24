@@ -26,7 +26,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.5
+        image: zekizeki/vulcaningress:0.0.7
         env:
           - name: ETCD_HOST
             value: "localhost"
@@ -41,7 +41,7 @@ spec:
           - name: KUBE_API_PASSWORD
             value: yourpassword
           - name: DOMAIN
-            value: .yourdomain.com
+            value: yourdomain.com
           - name: POD_NAME
             valueFrom:
               fieldRef:

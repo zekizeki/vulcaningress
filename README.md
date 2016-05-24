@@ -48,14 +48,14 @@ spec:
         ports:
           - containerPort: 8182
           - containerPort: 8181
-            hostPort: 8090
+            hostPort: 80
         command: ["/go/bin/vulcand","-apiInterface=0.0.0.0","--etcd=http://localhost:4001"]
       - name: etcd
         image: elcolio/etcd:latest
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.6
+        image: zekizeki/vulcaningress:0.0.7
         env:
           - name: ETCD_HOST
             value: "localhost"
@@ -78,7 +78,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.name
           - name: CONSUL_API_ADDRESS
-            vaule: "http://10.20.81.136:8500/v1/agent/service/register"
+            value: "http://127.0.0.1:8500/v1/agent/service/register"
 ```
 
 # Create the router

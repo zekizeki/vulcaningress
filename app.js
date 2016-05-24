@@ -26,7 +26,7 @@ var CONSUL_API_TOKEN = process.env.CONSUL_API_TOKEN;
 var POD_NAME = process.env.POD_NAME;
 var DOCKER_HOST_IP = process.env.DOCKER_HOST_IP;
 var DOCKER_POD_IP = process.env.DOCKER_POD_IP;
-var VULCAND_HOST_PORT = process.env.VULCAND_HOST_PORT || 8090;
+var VULCAND_HOST_PORT = process.env.VULCAND_HOST_PORT || 80;
 
 var etcd = new etcdnodejs({
     url: 'http://'+ETCD_HOST+':'+ETCD_PORT
@@ -174,10 +174,12 @@ function publishServiceToConsul(service){
   
   if(typeof(CONSUL_API_ADDRESS)!== 'undefined') {
    
-    var hostname = service.name+"-"+service.namespace;
+    var hostname = service.name+'-'+service.namespace;
     var environment = ENVIRONMENT_NAME;
+    var consulId = hostname + '-' + ENVIRONMENT_NAME;
     
     var consulSvc = {
+                  id: consulId,
                   name: environment, 
                   tags: [hostname], 
                   port: VULCAND_HOST_PORT,
