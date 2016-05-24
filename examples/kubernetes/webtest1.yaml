@@ -27,7 +27,7 @@ metadata:
     name: webtest1
     type: ingress
   annotations:
-    path: /test
+    path: "/.*"
     host: mydomain.com
 spec:
   ports:

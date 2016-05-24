@@ -11,8 +11,6 @@ spec:
       labels:
         name: router
     spec:
-      nodeSelector:
-        role: ingress
       containers:
       - name: vulcand
         image: mailgun/vulcand:v0.8.0-beta.2
@@ -26,7 +24,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.7
+        image: zekizeki/vulcaningress:0.0.8
         env:
           - name: ETCD_HOST
             value: "localhost"

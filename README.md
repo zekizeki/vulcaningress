@@ -11,20 +11,6 @@ Based on an idea from https://www.nginx.com/blog/load-balancing-kubernetes-servi
 This document explains how to create a loadbalancer that listens for new services being registered within a particular namespace and then creates a vulcand
 backend entry corresponding to the service
 
-### Optional - Choosing the Node That Hosts the router pod
-(Running the router on a specific node is not required if you have a consul instance, see consul info later in this document)
-To designate the node where the router pod runs, we add a label to that node. We get the list of all nodes by running:
-
-```
-kubectl get nodes
-```
-
-We can choose a node and then label it 
-
-```
-kubectl label node ranchercattle0 role=ingress
-```
-
 Define a replication controller for vulcand using etcd, the hostPort value is what will be exposed on the physical IP address of the chosen VM
 
 ```
@@ -41,8 +27,6 @@ spec:
       labels:
         name: router
     spec:
-      nodeSelector:
-      - role: ingress
       containers:
       - name: vulcand
         image: mailgun/vulcand:v0.8.0-beta.2
@@ -56,7 +40,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.7
+        image: zekizeki/vulcaningress:0.0.8
         env:
           - name: ETCD_HOST
             value: "localhost"
@@ -147,7 +131,7 @@ metadata:
     name: webtest1
     type: ingress
   annotations:
-    path: /mycontext
+    path: "/mycontext/.*"
     host: myapp.mydomain.com
 spec:
   ports:

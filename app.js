@@ -100,7 +100,7 @@ function addServiceBackends(services) {
     var name = services[i].name+'-'+services[i].namespace;
     var host = name+'.'+ ENVIRONMENT_NAME +'.'+DOMAIN;
     var serviceEndpoint = 'http://'+services[i].ip + ':' + services[i].port
-    var path = '/';
+    var path = '/.*';
     
     if(typeof(services[i].annotations) !== 'undefined') {
       
@@ -122,7 +122,7 @@ function addServiceBackends(services) {
     var etcdvalue = {
        Type: 'http',
        BackendId: name,
-       Route: 'Path("'+path+'") && Host("'+host+'")'
+       Route: 'PathRegexp("'+path+'") && Host("'+host+'")'
     }
     
     etcd.write({key: '/vulcand/frontends/'+name+'/frontend',value:JSON.stringify(etcdvalue),ttl:30}, etcdCallback);
