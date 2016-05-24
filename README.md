@@ -87,10 +87,10 @@ role=ingress
 
 # Service Annotations
 
-optionally a path annotation may be used, this will route any inbound traffic to the router on certain context path to the service address ( the default path is / )
+optionally a *path* regular expression annotation may be used, this will route any inbound traffic to the router on certain context path to the service address ( the default path is "/.*" )    This path option supports PathRegexp as described at http://vulcand.github.io/proxy.html#routing-language
 
 ```
-path=/contextpath
+path="/contextpath/.*"
 ```
 
 optionally a host annotation may be used, by default the host name is made up of the service name and the namespace the service is published into combined with a domain name set by the router administrator.
