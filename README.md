@@ -182,6 +182,8 @@ To publish service addresses to consul ensure that the following environment var
   value: tooling
 - name: CONSUL_API_ADDRESS
   value: http://consulhost:8500/v1/agent/service/register
+- name: CONSUL_API_TOKEN
+  value: xxxxxxxxxxxxxxxxx
 
 ```
 

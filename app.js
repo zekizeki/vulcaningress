@@ -190,8 +190,10 @@ function publishServiceToConsul(service){
     var requestOpts = {url:CONSUL_API_ADDRESS,body:bodyStr};
     
     if(typeof(CONSUL_API_TOKEN)!== 'undefined') {
-      requestOpts.auth = {bearer:CONSUL_API_TOKEN};
+      
+      requestOpts.headers = { 'X-Consul-Token': CONSUL_API_TOKEN }
     } 
+    
     // call kubernetes API
     request.put(requestOpts, function (error, response, body) {
       console.log("Publish service to consul"); 
