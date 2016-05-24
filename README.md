@@ -11,7 +11,8 @@ Based on an idea from https://www.nginx.com/blog/load-balancing-kubernetes-servi
 This document explains how to create a loadbalancer that listens for new services being registered within a particular namespace and then creates a vulcand
 backend entry corresponding to the service
 
-###Choosing the Node That Hosts the router pod
+### Optional - Choosing the Node That Hosts the router pod
+(Running the router on a specific node is not required if you have a consul instance, see consul info later in this document)
 To designate the node where the router pod runs, we add a label to that node. We get the list of all nodes by running:
 
 ```
@@ -175,6 +176,20 @@ To publish service addresses to consul ensure that the following environment var
   valueFrom:
     fieldRef:
       fieldPath: metadata.name
-- name
+- name: DOMAIN
+  value: service.consul
+- name: ENVIRONMENT_NAME
+  value: tooling
+- name: CONSUL_API_ADDRESS
+  value: http://consulhost:8500/v1/agent/service/register
 
 ```
+
+The environment name will be combined with the kubernetes service name and namespace to make up a routable host name.
+
+e.g.    myservice-mynamespace.myenv.service.consul
+
+With the above configuration a service with the label role=ingress will be made DNS discoverable using this naming convention.
+When a service is discovered a service entry is published to consul. Consul can act as a DNS server and make this service discoverable.
+
+
