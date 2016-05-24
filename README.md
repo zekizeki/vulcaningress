@@ -55,7 +55,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.5
+        image: zekizeki/vulcaningress:0.0.6
         env:
           - name: ETCD_HOST
             value: "localhost"
@@ -69,6 +69,16 @@ spec:
             value: yourusername
           - name: KUBE_API_PASSWORD
             value: yourpassword
+          - name: DOMAIN
+            value: service.consul
+          - name: ENVIRONMENT_NAME
+            value: tooling
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: CONSUL_API_ADDRESS
+            vaule: "http://10.20.81.136:8500/v1/agent/service/register"
 ```
 
 # Create the router
@@ -157,5 +167,14 @@ If published into the default namespace the above service would be routable usin
 http://webtest1-default.mydomain.com/
 
 
+# Using Consul for service discovery
+To publish service addresses to consul ensure that the following environment variables are set on the vulcaningress container
 
+```
+- name: POD_NAME
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.name
+- name
 
+```

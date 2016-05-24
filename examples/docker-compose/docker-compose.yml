@@ -25,6 +25,6 @@ vulcaningress:
     - ETCD_HOST=etcd
     - ETCD_PORT=2379
     - DOMAIN=.kubernetes
-    - KUBE_API_URL=http://9.45.207.152:8080/r/projects/1a8/kubernetes/api
+    - KUBE_API_URL=http://192.168.99.100:8080/r/projects/1a8/kubernetes/api
     
 

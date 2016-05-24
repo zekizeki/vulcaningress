@@ -40,3 +40,9 @@ spec:
             value: yourusername
           - name: KUBE_API_PASSWORD
             value: yourpassword
+          - name: DOMAIN
+            value: .yourdomain.com
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
