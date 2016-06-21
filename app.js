@@ -194,13 +194,13 @@ function publishServiceToConsul(service){
       requestOpts.headers = { 'X-Consul-Token': CONSUL_API_TOKEN }
     } 
     
-    // call kubernetes API
+    // call consul API
     request.put(requestOpts, function (error, response, body) {
       console.log("Publish service to consul"); 
       
       if (!error && response.statusCode == 200) {
         
-        console.log('service '+hostname+'.'+environment+' registered in consul');
+        console.log('service '+hostname+'.'+environment+' registered in consul and directing to ' + DOCKER_HOST_IP+ " on port "+VULCAND_HOST_PORT);
         
       } else {
           console.log('error adding service '+hostname+'.'+environment+' to consul: '+error);
@@ -210,9 +210,10 @@ function publishServiceToConsul(service){
   }
 }
 
-// on startup get the IP address of the HOST the pod is running on from the kubernetes API
-getPodHostIP();
+// get the IP address of the HOST the pod is running on from the kubernetes API, refresh occasionally
+Repeat(getPodHostIP).every(60, 'sec').start.in(0, 'sec');
 
 // Poll the kubernetes API for new services 
 // TODO we should be able to make this event based.
 Repeat(checkServices).every(SVC_POLL_INTERVAL, 'sec').start.in(2, 'sec');
+
