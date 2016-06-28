@@ -18,13 +18,15 @@ vulcand:
 
 vulcaningress:
   container_name: vulcaningress
-  image: zekizeki/vulcaningress:0.0.5
+  image: zekizeki/vulcaningress:0.0.9
   links:
     - etcd
   environment:
     - ETCD_HOST=etcd
     - ETCD_PORT=2379
     - DOMAIN=.kubernetes
-    - KUBE_API_URL=http://192.168.99.100:8080/r/projects/1a8/kubernetes/api
+    - KUBE_API_URL=https://hocs-npa.ipttools.io/r/projects/1a16558/kubernetes/api
+    - KUBE_API_USER=798FD01CF371EC7B6E06
+    - KUBE_API_PASSWORD=Y33FKW5RfhtRJKpoK1U4xZRxbBXSqWABedusCWqi
     
 

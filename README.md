@@ -93,10 +93,10 @@ optionally a *path* regular expression annotation may be used, this will route a
 path="/contextpath/.*"
 ```
 
-optionally a host annotation may be used, by default the host name is made up of the service name and the namespace the service is published into combined with a domain name set by the router administrator.
+optionally a host annotation may be used, by default the host name is made up of the service name and the namespace the service is published into combined with a domain name set by the router administrator. Changing this overrides the 'service' portion of the constructed url
 
 ```
-host=myservice.mydomain.com
+host=myservice
 ```
 
 Example replication controller and service ...

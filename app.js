@@ -21,7 +21,7 @@ var DOMAIN =  process.env.DOMAIN || '.service.consul';
 var ENVIRONMENT_NAME = process.env.ENVIRONMENT_NAME || 'test';
 var KUBE_API_USER = process.env.KUBE_API_USER || '';
 var KUBE_API_PASSWORD = process.env.KUBE_API_PASSWORD || '';
-var CONSUL_API_ADDRESS = process.env.CONSUL_API_ADDRESS;
+var CONSUL_API_ADDRESS = process.env.CONSUL_API_ADDRESS || 'http://kubernetes';
 var CONSUL_API_TOKEN = process.env.CONSUL_API_TOKEN;
 var POD_NAME = process.env.POD_NAME;
 var DOCKER_HOST_IP = process.env.DOCKER_HOST_IP;
@@ -109,9 +109,9 @@ function addServiceBackends(services) {
         path = services[i].annotations.path;
       } 
     
-      // allow the service to overide the host value through a label
+      // allow the service to overide the name value through a label
       if(typeof(services[i].annotations.host) !== 'undefined') {
-        host = services[i].annotations.host;
+        name = services[i].annotations.host+'-'+services[i].namespace;
       } 
     }
     
@@ -177,6 +177,11 @@ function publishServiceToConsul(service){
     var hostname = service.name+'-'+service.namespace;
     var environment = ENVIRONMENT_NAME;
     var consulId = hostname + '-' + ENVIRONMENT_NAME;
+    
+    // allow the service to overide the name value through a label
+    if(typeof(service.annotations.host) !== 'undefined') {
+      hostname = service.annotations.host+'-'+service.namespace;
+    }
     
     var consulSvc = {
                   id: consulId,
