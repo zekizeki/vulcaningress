@@ -112,6 +112,7 @@ function addServiceBackends(services) {
       // allow the service to overide the name value through a label
       if(typeof(services[i].annotations.host) !== 'undefined') {
         name = services[i].annotations.host+'-'+services[i].namespace;
+        host = name+'.'+ ENVIRONMENT_NAME +'.'+DOMAIN;
       } 
     }
     
