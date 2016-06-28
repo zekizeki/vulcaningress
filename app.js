@@ -123,7 +123,7 @@ function addServiceBackends(services) {
     
     var etcdvalue = {
        Type: 'http',
-       BackendId: name,
+       BackendId: vulcanName,
        Route: 'PathRegexp("'+path+'") && Host("'+host+'")'
     }
     
