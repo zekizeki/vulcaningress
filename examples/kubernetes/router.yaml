@@ -24,7 +24,7 @@ spec:
         ports:
           - containerPort: 4001
       - name: vulcaningress
-        image: zekizeki/vulcaningress:0.0.8
+        image: zekizeki/vulcaningress:0.0.10
         env:
           - name: ETCD_HOST
             value: "localhost"

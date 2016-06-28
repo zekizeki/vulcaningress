@@ -179,8 +179,10 @@ function publishServiceToConsul(service){
     var consulId = hostname + '-' + ENVIRONMENT_NAME;
     
     // allow the service to overide the name value through a label
-    if(typeof(service.annotations.host) !== 'undefined') {
-      hostname = service.annotations.host+'-'+service.namespace;
+    if(typeof(service.annotations) !== 'undefined') {
+      if(typeof(service.annotations.host) !== 'undefined') {
+        hostname = service.annotations.host+'-'+service.namespace;
+      }
     }
     
     var consulSvc = {
