@@ -98,6 +98,7 @@ function addServiceBackends(services) {
   for(var i = 0; i < services.length;i++) {
     
     var name = services[i].name+'-'+services[i].namespace;
+    var vulcanName = services[i].name+'-'+services[i].namespace;
     var host = name+'.'+ ENVIRONMENT_NAME +'.'+DOMAIN;
     var serviceEndpoint = 'http://'+services[i].ip + ':' + services[i].port
     var path = '/.*';
@@ -117,8 +118,8 @@ function addServiceBackends(services) {
     }
     
     // add backend and frontend info for vulcand to read from etcd
-    etcd.write({key: "/vulcand/backends/"+name+"/backend",value: '{"Type": "http"}',ttl:30}, etcdCallback);
-    etcd.write({key: "/vulcand/backends/"+name+"/servers/srv1",value: '{"URL": "'+serviceEndpoint+'"}',ttl:30}, etcdCallback);
+    etcd.write({key: "/vulcand/backends/"+vulcanName+"/backend",value: '{"Type": "http"}',ttl:30}, etcdCallback);
+    etcd.write({key: "/vulcand/backends/"+vulcanName+"/servers/srv1",value: '{"URL": "'+serviceEndpoint+'"}',ttl:30}, etcdCallback);
     
     var etcdvalue = {
        Type: 'http',
@@ -126,7 +127,7 @@ function addServiceBackends(services) {
        Route: 'PathRegexp("'+path+'") && Host("'+host+'")'
     }
     
-    etcd.write({key: '/vulcand/frontends/'+name+'/frontend',value:JSON.stringify(etcdvalue),ttl:30}, etcdCallback);
+    etcd.write({key: '/vulcand/frontends/'+vulcanName+'/frontend',value:JSON.stringify(etcdvalue),ttl:30}, etcdCallback);
     
     publishServiceToConsul(services[i]);
     
