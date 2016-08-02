@@ -1,6 +1,6 @@
 {
   "name": "vulcaningress",
-  "version": "0.0.15",
+  "version": "1.0.22",
   "description": "Service that polls a kubernetes API and gets a list of labelled services then adds them as backends in hipache via redis",
   "main": "app.js",
   "dependencies": {

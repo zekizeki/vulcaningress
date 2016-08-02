@@ -219,10 +219,53 @@ function publishServiceToConsul(service){
   }
 }
 
+
+// publish the vulcand ip address and port to consul
+function publishVulcanIpToConsul(){
+  
+  
+  if(typeof(CONSUL_API_ADDRESS)!== 'undefined') {
+   
+    var hostname = 'vulcan';
+    var environment = ENVIRONMENT_NAME;
+    var consulId = hostname + '-' + ENVIRONMENT_NAME;
+  
+    var consulSvc = {
+                  id: consulId,
+                  name: environment, 
+                  tags: [hostname], 
+                  port: VULCAND_HOST_PORT,
+                  address:DOCKER_HOST_IP
+                };
+                
+    var bodyStr=JSON.stringify(consulSvc);
+    var requestOpts = {url:CONSUL_API_ADDRESS,body:bodyStr};
+    
+    if(typeof(CONSUL_API_TOKEN)!== 'undefined') {
+      
+      requestOpts.headers = { 'X-Consul-Token': CONSUL_API_TOKEN }
+    } 
+    
+    // call consul API
+    request.put(requestOpts, function (error, response, body) {
+      console.log("Publish service to consul"); 
+      
+      if (!error && response.statusCode == 200) {
+        
+        console.log('service '+hostname+'.'+environment+' registered in consul and directing to ' + DOCKER_HOST_IP+ " on port "+VULCAND_HOST_PORT);
+        
+      } else {
+          console.log('error adding service '+hostname+'.'+environment+' to consul: '+error);
+      }
+    
+    })
+  }
+}
+
 // get the IP address of the HOST the pod is running on from the kubernetes API, refresh occasionally
 Repeat(getPodHostIP).every(60, 'sec').start.in(0, 'sec');
+Repeat(publishVulcanIpToConsul).every(61, 'sec').start.in(0, 'sec');
 
 // Poll the kubernetes API for new services 
 // TODO we should be able to make this event based.
 Repeat(checkServices).every(SVC_POLL_INTERVAL, 'sec').start.in(2, 'sec');
-
