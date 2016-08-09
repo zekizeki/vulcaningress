@@ -17,7 +17,7 @@ var KUBE_API_PATH = '/api';
 var KUBE_API_URL = process.env.KUBE_API_URL || 'https://'+KUBERNETES_SERVICE_HOST+':'+KUBERNETES_SERVICE_PORT+ KUBE_API_PATH;
 var KUBE_API = KUBE_API_URL +'/v1/services?labelSelector='+KUBE_SELECTOR;
 var KUBE_API_PODS = KUBE_API_URL +'/v1/pods';
-var DOMAIN =  process.env.DOMAIN || '.service.consul';
+var DOMAIN =  process.env.DOMAIN || 'service.consul';
 var ENVIRONMENT_NAME = process.env.ENVIRONMENT_NAME || 'test';
 var KUBE_API_USER = process.env.KUBE_API_USER || '';
 var KUBE_API_PASSWORD = process.env.KUBE_API_PASSWORD || '';
@@ -129,7 +129,10 @@ function addServiceBackends(services) {
     
     etcd.write({key: '/vulcand/frontends/'+vulcanName+'/frontend',value:JSON.stringify(etcdvalue),ttl:30}, etcdCallback);
     
-    publishServiceToConsul(services[i]);
+    if(DOMAIN === 'service.consul') {
+      publishServiceToConsul(services[i]);
+    }
+    
     
     console.log('updating vulcand backend in etcd '+host+' '+serviceEndpoint);
 
@@ -226,14 +229,13 @@ function publishVulcanIpToConsul(){
   
   if(typeof(CONSUL_API_ADDRESS)!== 'undefined') {
    
-    var hostname = 'vulcan';
     var environment = ENVIRONMENT_NAME;
-    var consulId = hostname + '-' + ENVIRONMENT_NAME;
+    var consulId = 'vulcan' + '-' + ENVIRONMENT_NAME;
   
     var consulSvc = {
                   id: consulId,
-                  name: environment, 
-                  tags: [hostname], 
+                  name: 'vulcan', 
+                  tags: [environment], 
                   port: VULCAND_HOST_PORT,
                   address:DOCKER_HOST_IP
                 };
@@ -252,10 +254,10 @@ function publishVulcanIpToConsul(){
       
       if (!error && response.statusCode == 200) {
         
-        console.log('service '+hostname+'.'+environment+' registered in consul and directing to ' + DOCKER_HOST_IP+ " on port "+VULCAND_HOST_PORT);
+        console.log('service vulcan'+environment+' registered in consul and directing to ' + DOCKER_HOST_IP+ " on port "+VULCAND_HOST_PORT);
         
       } else {
-          console.log('error adding service '+hostname+'.'+environment+' to consul: '+error);
+          console.log('error adding service vulcan'+environment+' to consul: '+error);
       }
     
     })
